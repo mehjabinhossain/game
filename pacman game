@@ -76,7 +76,39 @@ for(int i=5;i<15;i++) maze[i][8]=maze[i][12]=1;
 pacX = 1; pacY = 1; // pacman er shurur position
 dirX = dirY = 0;
 }
+// --------- Bonuses ----------
+void initBonuses() {
+bonuses.clear();
+int count = 0;
+while(count < 5){
+int bx = rand() % (COLS-2) + 1; //oouter wall bade bonus place kore
+int by = rand() % (ROWS-2) + 1;
+if(maze[by][bx] == 0){
+bonuses.push_back({bx, by, true});
+count++;
+}
+}
+}
 
+// --------- Draw Maze ----------
+void drawMaze() {
+for (int i = 0; i < ROWS; i++) {
+for (int j = 0; j < COLS; j++) {
+if (maze[i][j] == 1) {
+glColor3f(0.2, 0.2, 1.0);// colour set blue for blocks
+glRectf(j * TILE, i * TILE, (j + 1) * TILE, (i + 1) * TILE);
+} else if (maze[i][j] == 0) {
+glColor3f(1, 1, 1); //ehite color
+glBegin(GL_POLYGON);
+glVertex2f(j * TILE + TILE/2 - 2, i * TILE + TILE/2 - 2); //left edge  + moves centre , top edge
+glVertex2f(j * TILE + TILE/2 + 2, i * TILE + TILE/2 - 2);
+glVertex2f(j * TILE + TILE/2 + 2, i * TILE + TILE/2 + 2);
+glVertex2f(j * TILE + TILE/2 - 2, i * TILE + TILE/2 + 2);
+glEnd();
+}
+}
+}
+}
 
 
 
