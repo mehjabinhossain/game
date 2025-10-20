@@ -17,3 +17,26 @@ int pacX = 1, pacY = 1; // pacman er shurute position
 int dirX = 0, dirY = 0;
 int score = 0, lives = 3;
 int level = 1;
+
+bool showMessage = false;
+int messageTimer = 0;
+string funnyMessage = "Oops! Ghost got you! 😂";
+
+struct Ghost {
+int x, y; // ghost er starting coordinate
+int dx, dy; // movement koi jabe
+float r, g, b;
+};
+vector<Ghost> ghosts;
+
+struct Bonus {
+int x, y;
+bool active;
+};
+vector<Bonus> bonuses;
+
+bool powerUpActive = false; // power khainai tai false
+int powerUpTimer = 0;
+int flashTimer = 0;
+
+const double PI = 3.14159265358979323846;// circle jatiyo kichu draw er jnnno
