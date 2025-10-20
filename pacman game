@@ -111,6 +111,116 @@ glEnd();
 }
 
 
+// --------- Draw Bonuses (Banana Shape) ----------
+void drawBonuses() {
+for(auto &b: bonuses){ // vector bonus save er reference pathachhe
+if(b.active){ // active thakle
+int cx = b.x*TILE + TILE/2; //coor x hochhe column posit ar * tile diye left edge
+int cy = b.y*TILE + TILE/2;
+glColor3f(1.0, 0.9, 0.2); // yellow dise
+
+glBegin(GL_POLYGON);
+for(int i=0;i<360;i++){
+float rad = i*PI/180;
+float x = cos(rad)*10 + cx;
+float y = sin(rad)*5 + cy + sin(rad*2)*3; // funny curved banana shape
+glVertex2f(x, y);
+}
+glEnd();
+}
+}
+}
+
+// --------- Draw Pacman ----------
+void drawPacman() {
+glColor3f(1, 1, 0);// yellow colour
+glBegin(GL_TRIANGLE_FAN);
+glVertex2f(pacX * TILE + TILE/2, pacY * TILE + TILE/2);//pacman e rpositin
+for (int i = 30; i <= 330; i++) {
+float rad = i * PI / 180;
+glVertex2f(pacX * TILE + TILE/2 + cos(rad) * TILE/2,
+pacY * TILE + TILE/2 + sin(rad) * TILE/2);
+}
+glEnd();
+
+glColor3f(0, 0, 0);
+glBegin(GL_POLYGON);
+float ex = pacX * TILE + TILE/2 + 5; //centre
+float ey = pacY * TILE + TILE/2 - 8;
+for (int i = 0; i < 360; i++) {
+float rad = i * PI / 180;
+glVertex2f(ex + cos(rad) * 3, ey + sin(rad) * 3);
+}
+glEnd();
+}
+
+// --------- Draw Ghost ----------
+void drawGhost(Ghost &g) {
+int gx = g.x*TILE + TILE/2;// ghost centre posit
+int gy = g.y*TILE + TILE/2;
+
+if(powerUpActive){
+if(powerUpTimer <= 4 && (powerUpTimer % 2 == 0)){
+glColor3f(1, 1, 1);//sada
+}else{
+glColor3f(0, 0, 1);//blue
+}
+}else{
+glColor3f(g.r, g.g, g.b);
+}
+
+glBegin(GL_POLYGON);// ghost er body shape
+for(int i=0;i<180;i++){
+float rad = i * PI / 180;
+glVertex2f(gx + cos(rad)*TILE/2, gy + sin(rad)*TILE/2);// vertex along semicircle
+
+}
+glVertex2f(gx - TILE/2, gy); // flat base of body
+glVertex2f(gx + TILE/2, gy);
+glEnd();
+
+glColor3f(1,1,1); //white
+for(int k=0;k<2;k++){ // ghost er eye
+int offset = (k==0?-7:7); // - left, +gight
+glBegin(GL_POLYGON);
+for(int i=0;i<360;i++){
+float rad=i*PI/180;
+glVertex2f(gx+offset+cos(rad)*5, gy-5+sin(rad)*5); // hori eye down 5 unit
+}
+glEnd();
+glColor3f(0,0,0);// black
+glBegin(GL_POLYGON);
+for(int i=0;i<360;i++){
+float rad=i*PI/180;
+glVertex2f(gx+offset+cos(rad)*2, gy-5+sin(rad)*2);
+}
+glEnd();
+if(!powerUpActive) glColor3f(g.r,g.g,g.b);
+}
+}
+
+// --------- Pacman Movement ----------
+void movePacman() {
+int nx = pacX + dirX;// new cordinate pacmna er
+int ny = pacY + dirY;
+if (maze[ny][nx] != 1) { // wall thakle no
+pacX = nx;
+pacY = ny;
+if (maze[ny][nx] == 0) {
+maze[ny][nx] = -1;  // khabar kheye felse
+score += 10;
+}
+
+for(auto &b: bonuses){
+if(b.active && pacX == b.x && pacY == b.y){// kheye felse
+b.active = false;
+powerUpActive = true;
+powerUpTimer = 50; // 10 seconds
+}
+}
+}
+}
+
 
 
 
