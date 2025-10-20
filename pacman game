@@ -221,6 +221,82 @@ powerUpTimer = 50; // 10 seconds
 }
 }
 
+// --------- Ghost Movement ----------
+void moveGhosts() {
+for (auto &g : ghosts) {//loop e choltese
+int nx = g.x + g.dx;
+int ny = g.y + g.dy;
+if (maze[ny][nx] != 1) {
+g.x = nx; g.y = ny;
+} else {
+int dirs[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};// jdi wall pay
+int r = rand() % 4;
+g.dx = dirs[r][0]; g.dy = dirs[r][1];// randomly new directecio
+}
+}
+}
+
+// --------- Collision Check ----------
+void checkCollision() {
+for(auto &g: ghosts){
+if(pacX==g.x && pacY==g.y){// chk packman ghst postin
+if(powerUpActive){
+score += 50;
+g.x = 10; g.y = 10;//erset ghost positin
+}else{
+lives--;
+pacX = 1; pacY = 1;
+dirX = dirY = 0;
+showMessage = true;
+messageTimer = 5;
+
+level = 1;
+initMaze(level);
+initBonuses();
+ghosts.clear();
+ghosts.push_back({10,10,1,0,1,0,0});
+ghosts.push_back({15,15,0,1,1,0.4,0.7});
+ghosts.push_back({10,15,-1,0,0,1,1});
+ghosts.push_back({15,10,0,-1,1,0.5,0});
+
+if(lives<=0){
+cout<<"Game Over! Final Score: "<<score<<endl;
+exit(0);
+}
+}
+}
+}
+}
+
+// --------- Level Completion ----------
+bool levelComplete() {
+for(int i=0;i<ROWS;i++)
+for(int j=0;j<COLS;j++)
+if(maze[i][j]==0) return false;
+return true;
+}
+
+// --------- Display ----------
+void display() {
+glClear(GL_COLOR_BUFFER_BIT);
+drawMaze();
+drawBonuses();
+drawPacman();
+for (auto &g : ghosts) drawGhost(g);
+
+string hud = "Score: " + to_string(score) + " Lives: " + to_string(lives) + " Level: " + to_string(level);
+glColor3f(1,1,1);
+glRasterPos2f(10, HEIGHT-20);
+for(char c:hud) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
+if(showMessage){
+glColor3f(1, 0, 0);
+glRasterPos2f(WIDTH/4, HEIGHT/2);
+for(char c:funnyMessage) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+}
+
+glutSwapBuffers();
+}
 
 
 
