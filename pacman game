@@ -40,3 +40,47 @@ int powerUpTimer = 0;
 int flashTimer = 0;
 
 const double PI = 3.14159265358979323846;// circle jatiyo kichu draw er jnnno
+
+// --------- Maze Patterns ----------
+void initMaze(int lvl) {
+for(int i=0;i<ROWS;i++) // row er jnno 0-19
+for(int j=0;j<COLS;j++) // column er jnno
+maze[i][j] = 0;
+
+// Borders
+for(int i=0;i<ROWS;i++){
+maze[i][0] = maze[i][COLS-1] = 1;// 0-1 hoile left edge wall
+}
+for(int j=0;j<COLS;j++){
+maze[0][j] = maze[ROWS-1][j] = 1; //0-1 top edge banai
+}
+
+// Different patterns per level
+if(lvl==1){
+for(int i=5;i<15;i++) maze[5][i]=1;// hori wall row 5 c(5-14)
+for(int i=1;i<12;i++) maze[10][i]=1;
+}else if(lvl==2){
+for(int i=3;i<17;i+=2) maze[3][i]=maze[15][i]=1;
+for(int i=4;i<15;i+=2) maze[i][7]=1;
+}else if(lvl==3){
+for(int i=2;i<18;i++) maze[2][i]=maze[17][i]=1;
+for(int i=5;i<15;i++) maze[i][10]=1;
+}else if(lvl==4){
+for(int i=1;i<19;i+=2) maze[6][i]=maze[13][i]=1;
+for(int i=3;i<16;i+=2) maze[i][5]=maze[i][14]=1;
+}else if(lvl==5){
+for(int i=0;i<COLS;i+=2) maze[4][i]=maze[15][i]=1;
+for(int i=5;i<15;i++) maze[i][8]=maze[i][12]=1;
+}
+
+pacX = 1; pacY = 1; // pacman er shurur position
+dirX = dirY = 0;
+}
+
+
+
+
+
+
+
+
