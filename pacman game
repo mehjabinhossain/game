@@ -298,6 +298,77 @@ for(char c:funnyMessage) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
 glutSwapBuffers();
 }
 
+// --------- Timer ----------
+void timer(int = 0) {
+if(!showMessage){
+movePacman();
+moveGhosts();
+checkCollision();
+if(powerUpActive){
+powerUpTimer--;
+if(powerUpTimer <= 0) powerUpActive=false;
+}
+} else {
+messageTimer--;
+if(messageTimer <= 0) showMessage = false;
+}
+
+if(levelComplete() && !showMessage){
+level++;
+if(level > 5){
+cout << "You Win! Final Score: " << score << endl;
+exit(0);
+}
+initMaze(level);
+initBonuses();
+ghosts.clear();
+ghosts.push_back({10, 10, 1, 0, 1, 0, 0});
+ghosts.push_back({15, 15, 0, 1, 1, 0.4, 0.7});
+ghosts.push_back({10, 15, -1, 0, 0, 1, 1});
+ghosts.push_back({15, 10, 0, -1, 1, 0.5, 0});
+}
+
+glutPostRedisplay();
+glutTimerFunc(200, timer, 0);
+}
+
+// --------- Keyboard ----------
+void keyboard(int key, int, int) {
+if(key==GLUT_KEY_LEFT){dirX=-1; dirY=0;}
+if(key==GLUT_KEY_RIGHT){dirX=1; dirY=0;}
+if(key==GLUT_KEY_UP){dirX=0; dirY=-1;}
+if(key==GLUT_KEY_DOWN){dirX=0; dirY=1;}
+}
+
+// --------- Main ----------
+int main(int argc, char** argv){
+srand(time(0));
+initMaze(level);
+initBonuses();
+
+ghosts.push_back({10,10,1,0,1,0,0});
+ghosts.push_back({15,15,0,1,1,0.4,0.7});
+ghosts.push_back({10,15,-1,0,0,1,1});
+ghosts.push_back({15,10,0,-1,1,0.5,0});
+
+glutInit(&argc, argv);
+glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+glutInitWindowSize(WIDTH, HEIGHT);
+glutCreateWindow("Pac-Man Game");
+
+glMatrixMode(GL_PROJECTION);
+glLoadIdentity();
+gluOrtho2D(0, WIDTH, HEIGHT, 0);
+
+glutDisplayFunc(display);
+glutSpecialFunc(keyboard);
+timer();
+
+glutMainLoop();
+return 0;
+}
+
+
 
 
 
